@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Min PWA App</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="manifest" href="manifest.json">
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/service-worker.js')
+                .then(() => console.log("Service Worker registreret!"))
+                .catch(err => console.log("Service Worker fejl:", err));
+        }
+    </script>
+</head>
+<body>
+    <div class="app-container">
+        <h1>Velkommen til min PWA!</h1>
+        <img src="billede.png" alt="App-billede" width="200">
+        <a href="https://eksempel.dk" class="button">Gå til Link 1</a>
+        <a href="https://eksempel2.dk" class="button">Gå til Link 2</a>
+    </div>
+    
+    <script>
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            let installPrompt = e;
+            let installButton = document.createElement('button');
+            installButton.innerText = "Installer App";
+            installButton.classList.add("install-button");
+            document.body.appendChild(installButton);
+            installButton.addEventListener('click', () => {
+                installPrompt.prompt();
+                installPrompt.userChoice.then(choice => {
+                    if (choice.outcome === 'accepted') {
+                        console.log('Brugeren installerede appen');
+                    } else {
+                        console.log('Brugeren afviste installationen');
+                    }
+                    installButton.remove();
+                });
+            });
+        });
+    </script>
+</body>
+</html>
